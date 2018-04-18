@@ -10,7 +10,7 @@
   "scripts": {
     "build": "node ./scripts/build.js",
     "start": "npm run build && node ./index.js",
-    "test": "jest --watch"
+    "test": "jest *.wat *.js --watch"
   },
   "devDependencies": {
     "jest": "^22.4.3"

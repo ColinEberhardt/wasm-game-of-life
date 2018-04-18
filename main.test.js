@@ -1,4 +1,5 @@
 const { readFileSync } = require("fs");
+const build = require("./scripts/build/index");
 
 const instantiate = async () => {
   const buffer = readFileSync("./main.wasm");
@@ -6,6 +7,10 @@ const instantiate = async () => {
   const instance = await WebAssembly.instantiate(module);
   return instance.exports;
 };
+
+beforeAll(() => {
+  build("main.wat", "main.wasm");
+});
 
 test("hello world returns 42", async done => {
   const wasm = await instantiate();
