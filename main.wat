@@ -1,5 +1,5 @@
 (module
-  (memory 1)
+  (memory (export "memory") 1)
   (func $offsetFromCoordinate (param $x i32) (param $y i32) (result i32)
     get_local $y
     i32.const 50

@@ -10,8 +10,11 @@ const instantiate = async () => {
 
 let wasm;
 
-beforeAll(async done => {
+beforeAll(() => {
   build("main.wat", "main.wasm");
+});
+
+beforeEach(async done => {
   wasm = await instantiate();
   done();
 });
@@ -23,6 +26,13 @@ test("offsetFromCoordinate", () => {
 });
 
 test("get / set cell", () => {
+  expect(wasm.getCell(2, 2)).toBe(0);
   wasm.setCell(2, 2, 1);
   expect(wasm.getCell(2, 2)).toBe(1);
+});
+
+test("read memory directly", () => {
+  const memory = new Uint8Array(wasm.memory.buffer, 0, 4096);
+  wasm.setCell(2, 2, 10);
+  expect(memory[2 + 2 * 50]).toBe(10);
 });
