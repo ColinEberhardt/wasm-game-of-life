@@ -12,8 +12,12 @@ beforeAll(() => {
   build("main.wat", "main.wasm");
 });
 
-test("hello world returns 42", async done => {
+test("offsetFromCoordinate", async done => {
   const wasm = await instantiate();
-  expect(wasm.helloWorld()).toBe(42);
+
+  expect(wasm.offsetFromCoordinate(0, 0)).toBe(0);
+  expect(wasm.offsetFromCoordinate(49, 0)).toBe(49);
+  expect(wasm.offsetFromCoordinate(10, 2)).toBe(10 + 2 * 50);
+
   done();
 });
