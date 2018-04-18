@@ -1,0 +1,13 @@
+{
+  "name": "wasm-game-of-life",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Colin Eberhardt <colin.eberhardt@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "wabt": "^1.0.0"
+  },
+  "scripts": {
+    "build": "node ./scripts/build.js"
+  }
+}
