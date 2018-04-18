@@ -8,16 +8,21 @@ const instantiate = async () => {
   return instance.exports;
 };
 
-beforeAll(() => {
+let wasm;
+
+beforeAll(async done => {
   build("main.wat", "main.wasm");
+  wasm = await instantiate();
+  done();
 });
 
-test("offsetFromCoordinate", async done => {
-  const wasm = await instantiate();
-
+test("offsetFromCoordinate", () => {
   expect(wasm.offsetFromCoordinate(0, 0)).toBe(0);
   expect(wasm.offsetFromCoordinate(49, 0)).toBe(49);
   expect(wasm.offsetFromCoordinate(10, 2)).toBe(10 + 2 * 50);
+});
 
-  done();
+test("get / set cell", () => {
+  wasm.setCell(2, 2, 1);
+  expect(wasm.getCell(2, 2)).toBe(1);
 });
