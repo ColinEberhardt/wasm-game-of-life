@@ -109,6 +109,34 @@
     call $getCell
     i32.add
   )
+  (func $inRange (param $low i32) (param $high i32) (param $value i32) (result i32)
+    (if (result i32)
+      (block (result i32)
+        get_local $value
+        get_local $low
+        i32.lt_s
+      )
+      (then
+        i32.const 0
+      )
+      (else
+        (if (result i32)
+          (block (result i32)
+            get_local $value
+            get_local $high
+            i32.ge_s
+          )
+          (then
+            i32.const 0
+          )
+          (else
+            i32.const 1
+          )
+        )
+      )
+    )  
+  )
+  (export "inRange" (func $inRange))
   (export "offsetFromCoordinate" (func $offsetFromCoordinate))
   (export "liveNeighbourCount" (func $liveNeighbourCount))
   (export "getCell" (func $getCell))

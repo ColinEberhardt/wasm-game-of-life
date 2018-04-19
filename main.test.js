@@ -93,7 +93,16 @@ test("get cell handles boundary values", () => {
       wasm.setCell(x, y, 1);
     }
   }
-
   expect(wasm.getCell(-1, 0)).toBe(0);
-  // expect(wasm.getCell(50, 0)).toBe(0);
+});
+
+test("inRange", () => {
+  // mid
+  expect(wasm.inRange(0, 50, 25)).toBe(1);
+  // boundary
+  expect(wasm.inRange(0, 50, 0)).toBe(1);
+  expect(wasm.inRange(0, 50, 49)).toBe(1);
+  // outer boundary
+  expect(wasm.inRange(0, 50, -1)).toBe(0);
+  expect(wasm.inRange(0, 50, 50)).toBe(0);
 });
