@@ -11,8 +11,8 @@ const instantiate = async () => {
 const dumpMemory = () => {
   const memory = new Uint32Array(wasm.memory.buffer, 0, 50 * 50);
   let asciiMem = "";
-  for (let y = 0; y < 49; y++) {
-    for (let x = 0; x < 49; x++) {
+  for (let y = 0; y < 50; y++) {
+    for (let x = 0; x < 50; x++) {
       asciiMem += wasm.getCell(x, y) > 0 ? "#" : ".";
     }
     asciiMem += "\n";
@@ -88,12 +88,21 @@ test("without boundary values", () => {
 });
 
 test("get cell handles boundary values", () => {
-  for (let x = 0; x < 49; x++) {
-    for (let y = 0; y < 49; y++) {
+  for (let x = 0; x < 50; x++) {
+    for (let y = 0; y < 50; y++) {
       wasm.setCell(x, y, 1);
     }
   }
+  // x outer boundaries
+  expect(wasm.getCell(0, 0)).toBe(1);
+  expect(wasm.getCell(49, 0)).toBe(1);
   expect(wasm.getCell(-1, 0)).toBe(0);
+  expect(wasm.getCell(50, 0)).toBe(0);
+  // y boundaries
+  expect(wasm.getCell(5, -1)).toBe(0);
+  expect(wasm.getCell(5, 50)).toBe(0);
+  expect(wasm.getCell(5, 0)).toBe(1);
+  expect(wasm.getCell(5, 49)).toBe(1);
 });
 
 test("inRange", () => {

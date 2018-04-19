@@ -19,18 +19,24 @@
   (func $getCell (param $x i32) (param $y i32) (result i32)
     (if (result i32)
       (block (result i32)
-        get_local $x
         i32.const 0
-        i32.lt_s
+        i32.const 50
+        get_local $x
+        call $inRange
+        i32.const 0
+        i32.const 50
+        get_local $y
+        call $inRange
+        i32.and
       )
       (then
-        i32.const 0
-      )
-      (else
         get_local $x
         get_local $y
         call $offsetFromCoordinate
         i32.load8_u
+      )
+      (else
+        i32.const 0
       )
     )    
   )
