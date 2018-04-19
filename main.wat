@@ -17,10 +17,18 @@
     i32.store 
   )
   (func $getCell (param $x i32) (param $y i32) (result i32)
-    get_local $x
-    get_local $y
-    call $offsetFromCoordinate
-    i32.load8_u
+    (if (result i32)
+      (i32.lt_s (get_local $x) (i32.const 0))
+      (then
+        (i32.const 0)
+      )
+      (else
+        (get_local $x)
+        (get_local $y)
+        (call $offsetFromCoordinate)
+        (i32.load8_u)
+      )
+    )    
   )
   (func $liveNeighbourCount (param $x i32) (param $y i32) (result i32)
     i32.const 0

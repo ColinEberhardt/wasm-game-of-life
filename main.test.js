@@ -86,3 +86,14 @@ test("without boundary values", () => {
   wasm.setCell(3, 3, 1);
   expect(wasm.liveNeighbourCount(2, 2)).toBe(8);
 });
+
+test("get cell handles boundary values", () => {
+  for (let x = 0; x < 49; x++) {
+    for (let y = 0; y < 49; y++) {
+      wasm.setCell(x, y, 1);
+    }
+  }
+
+  expect(wasm.getCell(-1, 0)).toBe(0);
+  // expect(wasm.getCell(50, 0)).toBe(0);
+});
