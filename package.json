@@ -5,6 +5,7 @@
   "author": "Colin Eberhardt <colin.eberhardt@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axel": "^0.0.3",
     "wabt": "^1.0.0"
   },
   "scripts": {

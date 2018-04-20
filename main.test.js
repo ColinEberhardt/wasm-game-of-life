@@ -4,20 +4,20 @@ const build = require("./scripts/build/index");
 const instantiate = async () => {
   const buffer = readFileSync("./main.wasm");
   const module = await WebAssembly.compile(buffer);
-  const instance = await WebAssembly.instantiate(module);
+  const instance = await WebAssembly.instantiate(module, {
+    console: {
+      log: (x, y) => console.log(x, y)
+    }
+  });
   return instance.exports;
 };
 
-const dumpMemory = () => {
-  const memory = new Uint32Array(wasm.memory.buffer, 0, 50 * 50);
-  let asciiMem = "";
-  for (let y = 0; y < 50; y++) {
-    for (let x = 0; x < 50; x++) {
-      asciiMem += wasm.getCell(x, y) > 0 ? "#" : ".";
+const setAllCells = value => {
+  for (let x = 0; x < 50; x++) {
+    for (let y = 0; y < 50; y++) {
+      wasm.setCell(x, y, value);
     }
-    asciiMem += "\n";
   }
-  console.log(asciiMem);
 };
 
 let wasm;
@@ -88,11 +88,7 @@ test("without boundary values", () => {
 });
 
 test("get cell handles boundary values", () => {
-  for (let x = 0; x < 50; x++) {
-    for (let y = 0; y < 50; y++) {
-      wasm.setCell(x, y, 1);
-    }
-  }
+  setAllCells(1);
   // x outer boundaries
   expect(wasm.getCell(0, 0)).toBe(1);
   expect(wasm.getCell(49, 0)).toBe(1);
@@ -114,4 +110,76 @@ test("inRange", () => {
   // outer boundary
   expect(wasm.inRange(0, 50, -1)).toBe(0);
   expect(wasm.inRange(0, 50, 50)).toBe(0);
+});
+
+test("ensure isCellAlive only evaluates the first bit", () => {
+  wasm.setCell(2, 2, 0b1);
+  expect(wasm.isCellAlive(2, 2)).toBe(1);
+
+  wasm.setCell(2, 2, 0b11);
+  expect(wasm.isCellAlive(2, 2)).toBe(1);
+
+  wasm.setCell(2, 2, 0b10);
+  expect(wasm.isCellAlive(2, 2)).toBe(0);
+});
+
+test("setCellStateForNextGeneration", () => {
+  // live cell
+  wasm.setCell(2, 2, 1);
+
+  // alive in next generation
+  wasm.setCellStateForNextGeneration(2, 2, 1);
+  expect(wasm.getCell(2, 2)).toBe(0b11);
+
+  // dead in next generation
+  wasm.setCellStateForNextGeneration(2, 2, 0);
+  expect(wasm.getCell(2, 2)).toBe(0b01);
+
+  // dead cell
+  wasm.setCell(2, 2, 0);
+
+  // alive in next generation
+  wasm.setCellStateForNextGeneration(2, 2, 1);
+  expect(wasm.getCell(2, 2)).toBe(0b10);
+
+  // dead in next generation
+  wasm.setCellStateForNextGeneration(2, 2, 0);
+  expect(wasm.getCell(2, 2)).toBe(0b00);
+});
+
+test("evolveCellToNextGeneration", () => {
+  // a live cell with no live neighbours dies
+  setAllCells(0);
+  wasm.setCell(2, 2, 1);
+  wasm.evolveCellToNextGeneration(2, 2);
+  expect(wasm.getCell(2, 2)).toBe(0b01);
+
+  // a live cell with two live neighbours lives
+  setAllCells(0);
+  wasm.setCell(2, 2, 1);
+  wasm.setCell(2, 3, 1);
+  wasm.setCell(2, 1, 1);
+  wasm.evolveCellToNextGeneration(2, 2);
+  expect(wasm.getCell(2, 2)).toBe(0b11);
+
+  // a dead cell with all dead neighbours stays dead
+  setAllCells(0);
+  wasm.evolveCellToNextGeneration(2, 2);
+  expect(wasm.getCell(2, 2)).toBe(0b00);
+
+  // a dead cell with three live neighbours comes to life
+  setAllCells(0);
+  wasm.setCell(2, 2, 0);
+  wasm.setCell(2, 3, 1);
+  wasm.setCell(2, 1, 1);
+  wasm.setCell(1, 1, 1);
+  expect(wasm.liveNeighbourCount(2, 2)).toBe(3);
+  wasm.evolveCellToNextGeneration(2, 2);
+  expect(wasm.getCell(2, 2)).toBe(0b10);
+});
+
+test("promoteNextGeneration", () => {
+  wasm.setCell(2, 2, 0b10);
+  wasm.promoteNextGeneration();
+  expect(wasm.getCell(2, 2)).toBe(0b1);
 });
