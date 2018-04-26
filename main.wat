@@ -1,7 +1,7 @@
 (module
   (import "console" "log" (func $log (param i32) (param i32)))
 
-  (memory (export "memory") 1)
+  (memory $mem 1)
 
   (table 16 anyfunc)
   (elem (i32.const 0)
@@ -181,26 +181,9 @@
   )
 
   (func $inRange (param $low i32) (param $high i32) (param $value i32) (result i32)
-    (if (result i32)
-      (block (result i32)
-        (i32.lt_s (get_local $value) (get_local $low))
-      )
-      (then
-        i32.const 0
-      )
-      (else
-        (if (result i32)
-          (block (result i32)
-            (i32.ge_s (get_local $value) (get_local $high))
-          )
-          (then
-            i32.const 0
-          )
-          (else
-            i32.const 1
-          )
-        )
-      )
+    (i32.and
+      (i32.ge_s (get_local $value) (get_local $low))
+      (i32.lt_s (get_local $value) (get_local $high))
     )  
   )
 
@@ -348,4 +331,5 @@
   (export "liveNeighbourCount" (func $liveNeighbourCount))
   (export "getCell" (func $getCell))
   (export "setCell" (func $setCell))
+  (export "memory" (memory $mem))
 )

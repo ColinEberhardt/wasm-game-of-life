@@ -32,6 +32,7 @@ beforeEach(async done => {
 });
 
 test("offsetFromCoordinate", () => {
+  debugger;
   expect(wasm.offsetFromCoordinate(0, 0)).toBe(0);
   expect(wasm.offsetFromCoordinate(49, 0)).toBe(49 * 4);
   expect(wasm.offsetFromCoordinate(10, 2)).toBe(10 * 4 + 2 * 200);

@@ -20,7 +20,6 @@ const run = async () => {
   const render = () => {
     ctx.clear();
     ctx.bg(0, 128, 255);
-    const memory = new Uint32Array(game.memory.buffer, 0, 50 * 50);
     for (let y = 0; y < 30; y++) {
       for (let x = 0; x < 50; x++) {
         if (game.getCell(x, y) > 0) {
