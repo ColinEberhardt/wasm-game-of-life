@@ -14,11 +14,13 @@
     $dead
     $dead
     $dead
+    $dead
     ;; for cells that are currently alive
     $dead
     $dead
     $alive
     $alive
+    $dead
     $dead
     $dead
     $dead
@@ -221,7 +223,7 @@
       (call_indirect (result i32)
         (i32.or
           (i32.mul
-            (i32.const 8)
+            (i32.const 9)
             (call $isCellAlive
               (get_local $x)
               (get_local $y)
