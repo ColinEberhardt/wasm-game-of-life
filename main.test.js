@@ -1,18 +1,21 @@
+/**
+ * @jest-environment node
+ */
 const { readFileSync } = require("fs");
-const build = require("./scripts/build/index");
+const builder = require("./scripts/build");
 
 const instantiate = async () => {
   const buffer = readFileSync("./main.wasm");
   const module = await WebAssembly.compile(buffer);
   const instance = await WebAssembly.instantiate(module, {
     console: {
-      log: (x, y) => console.log(x, y)
-    }
+      log: (x, y) => console.log(x, y),
+    },
   });
   return instance.exports;
 };
 
-const setAllCells = value => {
+const setAllCells = (value) => {
   for (let x = 0; x < 50; x++) {
     for (let y = 0; y < 50; y++) {
       wasm.setCell(x, y, value);
@@ -23,10 +26,10 @@ const setAllCells = value => {
 let wasm;
 
 beforeAll(() => {
-  build("main.wat", "main.wasm");
+  builder.then((build) => build("main.wat", "main.wasm"));
 });
 
-beforeEach(async done => {
+beforeEach(async (done) => {
   wasm = await instantiate();
   done();
 });
