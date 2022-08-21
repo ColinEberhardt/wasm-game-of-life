@@ -3,7 +3,7 @@
 
   (memory $mem 1)
 
-  (table 16 anyfunc)
+  (table 18 anyfunc)
   (elem (i32.const 0)
     ;; for cells that are currently dead
     $dead
