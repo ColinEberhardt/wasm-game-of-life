@@ -83,7 +83,7 @@
       (else
         (i32.const 0)
       )
-    )
+    )    
   )
 
   (func $liveNeighbourCount (param $x i32) (param $y i32) (result i32)
@@ -94,7 +94,7 @@
       (i32.add
         (get_local $x)
         (i32.const 1)
-      )
+      )    
       (get_local $y)
     )
     i32.add
@@ -104,7 +104,7 @@
       (i32.add
         (get_local $x)
         (i32.const -1)
-      )
+      )    
       (get_local $y)
     )
     i32.add
@@ -124,7 +124,7 @@
       (i32.add
         (get_local $x)
         (i32.const -1)
-      )
+      ) 
       (i32.add
         (get_local $y)
         (i32.const -1)
@@ -137,7 +137,7 @@
       (i32.add
         (get_local $x)
         (i32.const 1)
-      )
+      ) 
       (i32.add
         (get_local $y)
         (i32.const -1)
@@ -160,7 +160,7 @@
       (i32.add
         (get_local $x)
         (i32.const -1)
-      )
+      ) 
       (i32.add
         (get_local $y)
         (i32.const 1)
@@ -173,7 +173,7 @@
       (i32.add
         (get_local $x)
         (i32.const 1)
-      )
+      ) 
       (i32.add
         (get_local $y)
         (i32.const 1)
@@ -186,7 +186,7 @@
     (i32.and
       (i32.ge_s (get_local $value) (get_local $low))
       (i32.lt_s (get_local $value) (get_local $high))
-    )
+    )  
   )
 
   (func $isCellAlive (param $x i32) (param $y i32) (result i32)
@@ -239,7 +239,7 @@
   )
 
   (func $increment (param $value i32) (result i32)
-    (i32.add
+    (i32.add 
       (get_local $value)
       (i32.const 1)
     )
@@ -250,14 +250,14 @@
     (local $y i32)
 
     (set_local $y (i32.const 0))
-
-    (block
-      (loop
+    
+    (block 
+      (loop 
 
         (set_local $x (i32.const 0))
 
-        (block
-          (loop
+        (block 
+          (loop 
             ;; (call $log
             ;;   (get_local $x)
             ;;   (get_local $y)
@@ -271,7 +271,7 @@
             (br 0)
           )
         )
-
+        
         (set_local $y (call $increment (get_local $y)))
         (br_if 1 (i32.eq (get_local $y) (i32.const 50)))
         (br 0)
@@ -284,13 +284,13 @@
     (local $y i32)
 
     (set_local $y (i32.const 0))
-
-    (block
-      (loop
+    
+    (block 
+      (loop 
 
         (set_local $x (i32.const 0))
 
-        (block
+        (block 
           (loop
             (call $setCell
               (get_local $x)
@@ -309,7 +309,7 @@
             (br 0)
           )
         )
-
+        
         (set_local $y (call $increment (get_local $y)))
         (br_if 1 (i32.eq (get_local $y) (i32.const 50)))
         (br 0)
